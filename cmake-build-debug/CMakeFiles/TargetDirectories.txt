@@ -1,3 +1,0 @@
-C:/Users/Dima/Desktop/Operation System/github_hw3/cmake-build-debug/CMakeFiles/github_hw3.dir
-C:/Users/Dima/Desktop/Operation System/github_hw3/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Dima/Desktop/Operation System/github_hw3/cmake-build-debug/CMakeFiles/rebuild_cache.dir
