@@ -13,7 +13,10 @@ public:
 	void down(); // Block untill counter >0, and mark - One thread has entered the critical section.
 
 private:
-	// TODO 
+	int counter;
+	pthread_cond_t cond;
+	pthread_mutex_t mutex;
+
 };
 
 #endif
