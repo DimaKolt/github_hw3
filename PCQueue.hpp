@@ -13,7 +13,9 @@ public:
 	// Assumes multiple consumers.
 	T pop(){
 		avail_items.down();
-		return item_queue.pop();
+		T item=item_queue.front();
+		item_queue.pop();
+		return item;
 	}
 
 	// Allows for producer to enter with *minimal delay* and push items to back of the queue.
