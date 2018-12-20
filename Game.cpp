@@ -1,4 +1,4 @@
-#include <Game.hpp>
+#include "Game.hpp"
 /*--------------------------------------------------------------------------------
 								
 --------------------------------------------------------------------------------*/
@@ -39,9 +39,9 @@ void Game::_destroy_game(){
 /*--------------------------------------------------------------------------------
 								
 --------------------------------------------------------------------------------*/
-inline static void print_board(const char* header) {
+inline  void Game::print_board(const char* header) {
 
-	if(print_on){ 
+	if(print_on){
 
 		// Clear the screen, to create a running animation 
 		if(interactive_on)

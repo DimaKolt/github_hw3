@@ -6,7 +6,7 @@
 class Semaphore {
 public:
     Semaphore():counter(0),cond(),mutex(){}
-    Semaphore(unsigned val):counter(val),cond(),mutex(){}
+    explicit Semaphore(unsigned val):counter(val),cond(),mutex(){}
 
     void down(){
         pthread_mutex_lock(&mutex);
