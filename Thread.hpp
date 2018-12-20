@@ -23,7 +23,7 @@ public:
 	/** Returns the thread_id **/
 	uint thread_id()
 	{
-
+        return  pthread_self();
 	}
 protected:
 	/** Implement this method in your subclass with the code you want your thread to run. */

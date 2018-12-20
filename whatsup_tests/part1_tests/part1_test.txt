@@ -1,0 +1,117 @@
+#!/bin/bash
+g++ -std=c++11 -pthread queue_test.cpp -o part1
+echo "Running PCQueue test - about a minute"
+./part1
+sleep 45
+i=1
+prv_line=""
+while read line; do 
+if (($i != 1 )); then
+	if (( $prv_line == $line)); then
+		echo "wrong access to queue, same job taken"
+		echo "Queue general test failed"
+		exit
+	fi
+fi
+i=$i+1
+prv_line=$line
+done < queue_test.txt
+i=1
+prv_line=""
+while read line; do 
+if (($i != 1 )); then
+	if (( $prv_line == $line)); then
+		echo "wrong access to queue, same job taken"
+		echo "Queue with more inputs than outputs failed"
+		exit
+	fi
+fi
+i=$i+1
+prv_line=$line
+done < queue_test1.txt
+i=1
+prv_line=""
+while read line; do 
+if (($i != 1 )); then
+	if (( $prv_line == $line)); then
+		echo "wrong access to queue, same job taken"
+		echo "Queue with less inputs than outputs failed"
+		exit
+	fi
+fi
+i=$i+1
+prv_line=$line
+done < queue_test2.txt
+echo "Queue tests passed"
+rm queue_test.txt
+rm queue_test1.txt
+rm queue_test2.txt
+rm part1
+sleep 1
+
+g++ -std=c++11 -pthread semaphore_test.cpp -o part1
+echo "Running semaphore test - about 30 seconds"
+./part1
+sleep 25
+i=1
+while read line; do 
+if (($i % 4 == 1 )); then
+	if [[ "Entered"* == $line ]]; then
+		echo "wrong access to semaphore"
+		echo "Failed semaphore as mutex test"
+		exit
+	fi
+fi
+if (($i % 4 == 2 )); then
+	if [[ "Currently 1"* == $line ]]; then
+		echo "wrong access to semaphore"
+		echo "Failed semaphore as mutex test"
+		exit
+	fi
+fi
+if (($i % 4 == 3 )); then
+	if [[ "Currently 0"* == $line ]]; then
+		echo "wrong access to semaphore"
+		echo "Failed semaphore as mutex test"
+		exit
+	fi
+fi
+if (($i % 4 == 0 )); then
+	if [[ "exited"* == $line ]]; then
+		echo "wrong access to semaphore"
+		echo "Failed semaphore as mutex test"
+		exit
+	fi
+fi
+i=$i+1
+done < sam.txt
+rm sam.txt
+
+enter=0
+exit=0
+while read line; do 
+if [[ $i == "Entered"* ]]; then
+	enter++
+fi
+if [[ $i == "exited"* ]]; then
+	exit++
+	if (( $exit > $enter )); then
+		echo "wrong access to semaphore"
+		echo "Failed semaphore 5 test"
+		exit
+	fi
+fi
+if [[ $i == "Currently"* ]]; then
+	var = 'cut -d" "c2 $i'
+	if (( $var > 5 || $var < 0 )); then
+		echo "wrong access to semaphore"
+		echo "Failed semaphore 5 test"
+		exit
+	fi
+fi
+i=$i+1
+done < s5.txt
+echo "Passed semaphore test"
+rm s5.txt
+rm part1
+
