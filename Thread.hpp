@@ -8,7 +8,7 @@ public:
 	{
 		// Only places thread_id 
 	} 
-	virtual ~Thread() {} // Does nothing 
+	virtual ~Thread() {} // Does nothing
 
 	/** Returns true if the thread was successfully started, false if there was an error starting the thread */
 	bool start()

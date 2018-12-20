@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "Headers.hpp"
 
 static inline game_params parse_input_args(int argc, char **argv);
 static inline void usage(const char* mes);
