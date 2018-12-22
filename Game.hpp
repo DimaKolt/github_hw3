@@ -3,7 +3,7 @@
 
 #include "Headers.hpp"
 #include "Thread.hpp"
-
+#include "Task.hpp"
 /*--------------------------------------------------------------------------------
 								  Auxiliary Structures
 --------------------------------------------------------------------------------*/
@@ -54,9 +54,10 @@ protected: // All members here are protected, instead of private for testing pur
 	
 	int height_matrix;
 	int width_matrix;
-	PCQueue<ThrTask> tasks_q; //TODO ThrTask
+	PCQueue<Task> tasks_q; //TODO ThrTask
 	//TODO add 2 heap feilds curr & next
-	
+	int** curr;
+	int** next;
 	
 };
 #endif

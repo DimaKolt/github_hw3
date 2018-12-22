@@ -16,18 +16,34 @@ void Game::run() {
 	print_board("Final Board");
 	_destroy_game();
 }
-
+//changed by Adi
 void Game::_init_game() {
 	// Create threads
-	// Create game fields
+	//TODO manage constructor
+	gameThread* threadArray=new gameThread[m_thread_num];
+    // Create game fields
+	curr = new int*[height_matrix];
+	for(int i=0;i<width_matrix;i++)
+	{
+		curr[i]=new int[width_matrix];
+	}
+	next = new int*[height_matrix];
+	for(int i=0;i<width_matrix;i++)
+	{
+		curr[i]=new int[width_matrix];
+	}
 	// Start the threads
+	for (int i = 0; i < m_thread_num; ++i){
+		threadArray[i].start();
+	}
 	// Testing of your implementation will presume all threads are started here
-}
+};
 
 void Game::_step(uint curr_gen) {
 	// Push jobs to queue
-	// Wait for the workers to finish calculating 
-	// Swap pointers between current and next field 
+	//TODO create jobs
+	// Wait for the workers to finish calculating
+	// Swap pointers between current and next field
 }
 
 void Game::_destroy_game(){
