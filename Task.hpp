@@ -12,12 +12,22 @@ private:
     int end_index;
     int **curr_table;
     int **next_table;
+    int hight;
+    int width;
 
 public:
-    Task(): start_index(0),end_index(0),curr_table(0),next_table(0){}
-    Task(int start,int ending,int** curr,int** next): start_index(start),end_index(ending),curr_table(curr),next_table(next){}
+    Task(): start_index(0),end_index(0),curr_table(0),next_table(0),hight(0),width(0){}
+    Task(int start,int ending,int** curr,int** next,int table_higth,int table_width)
+                            : start_index(start),end_index(ending),curr_table(curr),next_table(next)
+                                                            ,hight(table_higth),width(table_width){}
     int getStartIndex(){ return start_index;}
     int getEndIndex(){ return end_index;}
+    int getWidth(){ return width;}
+    int getHight(){ return hight;}
+    int getNumOfRows(){ return end_index-start_index;}
+    int** getCurr(){ return curr_table;}
+    int** getNext(){ return next_table;}
+
 
     Task(const Task& task)= default;
     ~Task() = default;
