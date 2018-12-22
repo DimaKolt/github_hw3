@@ -36,32 +36,48 @@ Game::Game(game_params params){
 /*--------------------------------------------------------------------------------
 								
 --------------------------------------------------------------------------------*/
-//void Game::run() {
-//
-//	_init_game(); // Starts the threads and all other variables you need
-//	print_board("Initial Board");
-//	for (uint i = 0; i < m_gen_num; ++i) {
-//		auto gen_start = std::chrono::system_clock::now();
-//		_step(i); // Iterates a single generation
-//		auto gen_end = std::chrono::system_clock::now();
-//		m_gen_hist.push_back((float)std::chrono::duration_cast<std::chrono::microseconds>(gen_end - gen_start).count());
-//		print_board(NULL);
-//	} // generation loop
-//	print_board("Final Board");
-//	_destroy_game();
-//}
+void Game::run() {
+
+	_init_game(); // Starts the threads and all other variables you need
+	print_board("Initial Board");
+	for (uint i = 0; i < m_gen_num; ++i) {
+		auto gen_start = std::chrono::system_clock::now();
+		_step(i); // Iterates a single generation 
+		auto gen_end = std::chrono::system_clock::now();
+		m_gen_hist.push_back((float)std::chrono::duration_cast<std::chrono::microseconds>(gen_end - gen_start).count());
+		print_board(NULL);
+	} // generation loop
+	print_board("Final Board");
+	_destroy_game();
+}
 
 void Game::_init_game() {
 	// Create threads
-	// Create game fields
+	//TODO manage constructor
+	gameThread* threadArray=new gameThread[m_thread_num];
+    // Create game fields
+	curr = new int*[height_matrix];
+	for(int i=0;i<width_matrix;i++)
+	{
+		curr[i]=new int[width_matrix];
+	}
+	next = new int*[height_matrix];
+	for(int i=0;i<width_matrix;i++)
+	{
+		curr[i]=new int[width_matrix];
+	}
 	// Start the threads
+	for (int i = 0; i < m_thread_num; ++i){
+		threadArray[i].start();
+	}
 	// Testing of your implementation will presume all threads are started here
-}
+};
 
 void Game::_step(uint curr_gen) {
 	// Push jobs to queue
-	// Wait for the workers to finish calculating 
-	// Swap pointers between current and next field 
+	//TODO create jobs
+	// Wait for the workers to finish calculating
+	// Swap pointers between current and next field
 }
 
 void Game::_destroy_game(){

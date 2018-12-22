@@ -34,7 +34,7 @@ private:
 	// Add your class memebers here
 	Semaphore avail_items;
 	Semaphore producer;
-	queue<T> item_queue;
+	std::queue<T> item_queue;
 
 };
 
