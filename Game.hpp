@@ -22,7 +22,7 @@ class Game {
 public:
 
 	Game(game_params); //TODO init param to class parameters, but before to understant the N and the M size of given matrix. allocate 2 matrix on heap (curr & next)
-	~Game();
+	~Game(){}
 	void run(); // Runs the game
 	const vector<float> gen_hist() const; // Returns the generation timing histogram  
 	const vector<float> tile_hist() const; // Returns the tile timing histogram
@@ -54,6 +54,7 @@ protected: // All members here are protected, instead of private for testing pur
 	
 	int height_matrix;
 	int width_matrix;
+    string filename;
 	PCQueue<Task>* tasks_q; //TODO ThrTask
 	//TODO add 2 heap feilds curr & next
 	int** curr;

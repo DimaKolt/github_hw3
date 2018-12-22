@@ -92,24 +92,16 @@ Game::Game(game_params params){
 	print_on=params.print_on;
 	height_matrix=num_of_rows;
 	width_matrix=num_of_calls;
+	filename=params.filename;
 //	curr = new int[num_of_calls][num_of_rows];
-	curr = new int*[num_of_rows];
-	next = new int*[num_of_rows];
-	for(int i = 0; i < num_of_rows; ++i){
-		curr[i] = new int[num_of_calls];
-		next[i] = new int[num_of_calls];
-	}
-	InitTheBoards(curr,next,height_matrix,width_matrix,params.filename);
-	print_board("tiny");
-}
-
-Game::~Game(){
-	for(int i=0;i<height_matrix; i++){
-		delete curr[i];
-		delete next[i];
-	}
-	delete[] curr;
-	delete[] next;
+//	curr = new int*[num_of_rows];
+//	next = new int*[num_of_rows];
+//	for(int i = 0; i < num_of_rows; ++i){
+//		curr[i] = new int[num_of_calls];
+//		next[i] = new int[num_of_calls];
+//	}
+//	InitTheBoards(curr,next,height_matrix,width_matrix,params.filename);
+//	print_board("tiny");
 }
 
 
@@ -140,7 +132,14 @@ void Game::_init_game() {
 	for (int j = 0; j < m_thread_num; ++j){
 		threadArray[j] = new gameThread(j,tasks_q);
 	}
-    // Create game fields --- in constructor
+    // Create game fields
+	curr = new int*[height_matrix];
+	next = new int*[height_matrix];
+	for(int i = 0; i < height_matrix; ++i){
+		curr[i] = new int[width_matrix];
+		next[i] = new int[width_matrix];
+	}
+	InitTheBoards(curr,next,height_matrix,width_matrix,filename);
 
 	// Start the threads
 	for (int i = 0; i < m_thread_num; ++i){
@@ -179,7 +178,13 @@ void Game::_step(uint curr_gen) {
 
 void Game::_destroy_game(){
 	// Destroys board and frees all threads and resources
-	//needed?
+	for(int i=0;i<height_matrix; i++){
+		delete curr[i];
+		delete next[i];
+	}
+	delete[] curr;
+	delete[] next;
+	
 	for (int i = 0; i <m_thread_num; ++i){
 		threadArray[i]->join();
 	}
@@ -220,19 +225,6 @@ inline  void Game::print_board(const char* header) {
 }
 
 
-/* Function sketch to use for printing the board. You will need to decide its placement and how exactly 
-	to bring in the field's parameters. 
-
-		cout << u8"╔" << string(u8"═") * field_width << u8"╗" << endl;
-		for (uint i = 0; i < field_height ++i) {
-			cout << u8"║";
-			for (uint j = 0; j < field_width; ++j) {
-				cout << (field[i][j] ? u8"█" : u8"░");
-			}
-			cout << u8"║" << endl;
-		}
-		cout << u8"╚" << string(u8"═") * field_width << u8"╝" << endl;
-*/ 
 
 
 
