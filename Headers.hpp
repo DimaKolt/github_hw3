@@ -26,7 +26,7 @@
 // Threads & Synchronization 
 #include <pthread.h>
 
-//#include "PCQueue.hpp"
+#include "PCQueue.hpp"
 
 /*--------------------------------------------------------------------------------
 									   Typedefs
