@@ -1,21 +1,55 @@
 #include "Game.hpp"
+#include <iostream>
+#include <fstream>
+#include <string>
+
+
+static void countDemension(string filename, int* num_of_calls, int* num_of_rows){
+    std::ifstream fin(filename);
+    int val = 0;
+    int num_items = 0;
+    char c;
+    while ( fin.get(c)){
+        if(c!='\n'){
+            ++num_items;
+        }
+    }
+    *num_of_calls=num_items;
+    while(fin>>val){
+        ++num_items;
+//        if (num_items%(*num_of_calls)==0){
+//
+//        }
+    }
+    *num_of_rows=num_items/(*num_of_calls);
+}
+
+Game::Game(game_params params){
+    int num_of_calls;
+    int num_of_rows;
+    countDemension(params.filename,&num_of_calls,&num_of_rows);
+    
+}
+
+
+
 /*--------------------------------------------------------------------------------
 								
 --------------------------------------------------------------------------------*/
-void Game::run() {
-
-	_init_game(); // Starts the threads and all other variables you need
-	print_board("Initial Board");
-	for (uint i = 0; i < m_gen_num; ++i) {
-		auto gen_start = std::chrono::system_clock::now();
-		_step(i); // Iterates a single generation 
-		auto gen_end = std::chrono::system_clock::now();
-		m_gen_hist.push_back((float)std::chrono::duration_cast<std::chrono::microseconds>(gen_end - gen_start).count());
-		print_board(NULL);
-	} // generation loop
-	print_board("Final Board");
-	_destroy_game();
-}
+//void Game::run() {
+//
+//	_init_game(); // Starts the threads and all other variables you need
+//	print_board("Initial Board");
+//	for (uint i = 0; i < m_gen_num; ++i) {
+//		auto gen_start = std::chrono::system_clock::now();
+//		_step(i); // Iterates a single generation
+//		auto gen_end = std::chrono::system_clock::now();
+//		m_gen_hist.push_back((float)std::chrono::duration_cast<std::chrono::microseconds>(gen_end - gen_start).count());
+//		print_board(NULL);
+//	} // generation loop
+//	print_board("Final Board");
+//	_destroy_game();
+//}
 
 void Game::_init_game() {
 	// Create threads

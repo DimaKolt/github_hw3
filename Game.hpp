@@ -21,12 +21,12 @@ struct game_params {
 class Game {
 public:
 
-	Game(game_params); //TODO init param to class parameters, but before to understant the N and the M size of given matrix. allocate 2 matrix on heap (curr & next)
-	~Game();
-	void run(); // Runs the game
-	const vector<float> gen_hist() const; // Returns the generation timing histogram  
-	const vector<float> tile_hist() const; // Returns the tile timing histogram
-	uint thread_num() const; //Returns the effective number of running threads = min(thread_num, field_height)
+	Game(game_params params); //TODO init param to class parameters, but before to understant the N and the M size of given matrix. allocate 2 matrix on heap (curr & next)
+//	~Game();
+//	void run(); // Runs the game
+//	const vector<float> gen_hist() const; // Returns the generation timing histogram
+//	const vector<float> tile_hist() const; // Returns the tile timing histogram
+//	uint thread_num() const; //Returns the effective number of running threads = min(thread_num, field_height)
 
 
 protected: // All members here are protected, instead of private for testing purposes
@@ -51,12 +51,14 @@ protected: // All members here are protected, instead of private for testing pur
 	bool print_on; // Allows the printing of the board. Turn this off when you are checking performance (Dry 3, last question)
 
 	// TODO: Add in your variables and synchronization primitives
-	
-	int height_matrix;
-	int width_matrix;
-	PCQueue<ThrTask> tasks_q; //TODO ThrTask
-	//TODO add 2 heap feilds curr & next
-	
-	
+//
+//	int height_matrix;
+//	int width_matrix;
+//	PCQueue<ThrTask> tasks_q; //TODO ThrTask
+//	//TODO add 2 heap feilds curr & next
+//	int** curr;
+//	int** next;
+//
+//
 };
 #endif
