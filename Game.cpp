@@ -1,8 +1,4 @@
 #include "Game.hpp"
-#include <iostream>
-#include <fstream>
-#include <string>
-
 
 static void countDemension(string filename, int* num_of_calls, int* num_of_rows){
     std::ifstream fin;
@@ -104,7 +100,17 @@ Game::Game(game_params params){
 //	print_board("tiny");
 }
 
+uint Game::thread_num() const{
+    return m_thread_num;
+}
 
+const vector<float> Game::gen_hist() const{
+    return m_gen_hist;
+}
+
+const vector<float> Game::tile_hist() const{
+    return m_tile_hist;
+}
 
 /*--------------------------------------------------------------------------------
 								
@@ -128,9 +134,9 @@ void Game::_init_game() {
 	// Create threads
 	//TODO manage constructor
 	tasks_q=new PCQueue<Task>;
-	threadArray =new gameThread*[m_thread_num];
+	//threadArray =new gameThread*[m_thread_num]; //TODO USE GIVEN THREAD VECTOR
 	for (int j = 0; j < m_thread_num; ++j){
-		threadArray[j] = new gameThread(j,tasks_q);
+        m_threadpool.insert(m_threadpool.end(),(new gameThread(j,tasks_q)));// = new gameThread(j,tasks_q);
 	}
     // Create game fields
 	curr = new int*[height_matrix];
@@ -142,8 +148,8 @@ void Game::_init_game() {
 	InitTheBoards(curr,next,height_matrix,width_matrix,filename);
 
 	// Start the threads
-	for (int i = 0; i < m_thread_num; ++i){
-		threadArray[i]->start();
+	for (int i = 0; i < m_threadpool.size(); ++i){
+        m_threadpool[i]->start();
 	}
 
 	// Testing of your implementation will presume all threads are started here
@@ -165,8 +171,8 @@ void Game::_step(uint curr_gen) {
 	}
 
 	// Wait for the workers to finish calculating
-	for (int i = 0; i <m_thread_num; ++i){
-		threadArray[i]->join();
+	for (int i = 0; i <m_threadpool.size(); ++i){
+        m_threadpool[i]->join();
 	}
 
 	// Swap pointers between current and next field
@@ -174,6 +180,7 @@ void Game::_step(uint curr_gen) {
 	temp=curr;
 	curr=next;
 	next=temp;
+
 }
 
 void Game::_destroy_game(){
@@ -185,15 +192,16 @@ void Game::_destroy_game(){
 	delete[] curr;
 	delete[] next;
 	
-	for (int i = 0; i <m_thread_num; ++i){
-		threadArray[i]->join();
-	}
+	//we waited in evry generation for all the threads
+//	for (int i = 0; i <m_thread_num; ++i){
+//		threadArray[i]->join();
+//	}
 
 	delete tasks_q;
-	for (int i = 0; i < m_thread_num; ++i){
-		delete(threadArray[i]);
+	for (int i = 0; i < m_threadpool.size(); ++i){
+		delete(m_threadpool[i]);
 	}
-	delete[](threadArray);
+//	delete[](threadArray);
 
 	// Not implemented in the Game's destructor for testing purposes. 
 	// Testing of your implementation will presume all threads are joined here
@@ -214,7 +222,7 @@ inline  void Game::print_board(const char* header) {
 		if (header != NULL)
 			cout << "<------------" << header << "------------>" << endl;
 		
-		// TODO: Print the board
+		
 		PrintTheBoard(curr,height_matrix,width_matrix);
 
 		// Display for GEN_SLEEP_USEC micro-seconds on screen 

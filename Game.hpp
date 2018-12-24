@@ -55,10 +55,9 @@ protected: // All members here are protected, instead of private for testing pur
 	int height_matrix;
 	int width_matrix;
     string filename;
-	PCQueue<Task>* tasks_q; //TODO ThrTask
-	//TODO add 2 heap feilds curr & next
+	PCQueue<Task>* tasks_q;
 	int** curr;
 	int** next;
-	gameThread** threadArray;
+//	gameThread** threadArray;
 };
 #endif
