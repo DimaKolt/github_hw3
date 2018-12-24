@@ -60,7 +60,7 @@ public:
 
 			 task.get_mutex()->down();
 			 task.counterDown();
-			 printf("counter is %d\n", task.check_counte());
+			 printf("counter from thread is %d\n", task.check_counte());
 			 if (task.check_counte() == 0){
 				 task.get_barrier()->up();
 				 printf("all tasks is finished\n");
@@ -71,25 +71,33 @@ public:
 
 	 int cubeStatus(int i,int j, int width,int hight,int** curr){
 		if( i<0 || i>=width || j <0 || j>=hight) return 0;
+		printf("curr[%d][%d]=%d,",i,j,curr[i][j]);
 		 return curr[i][j];
 	 }
 	 int cubeInNextGen(int i,int j, int width,int hight,int** curr){
 	 	int cube_current_status=curr[i][j];
 	 	int cube_neighbours=0;
+		 printf("start handle curr[%d][%d], status: %d by task: %d\n",i,j,cube_current_status,thread_id());
 		 for (int k = 0; k <3; ++k){
-			 cube_neighbours+=cubeStatus(i-1,j+k,width,hight,curr);
-			 cube_neighbours+=cubeStatus(i+1,j+k,width,hight,curr);
+		 	
+			 cube_neighbours+=cubeStatus(i-1,j-1+k,width,hight,curr);
+			 cube_neighbours+=cubeStatus(i+1,j-1+k,width,hight,curr);
 		 }
 		 cube_neighbours+=cubeStatus(i,j-1,width,hight,curr);
 		 cube_neighbours+=cubeStatus(i,j+1,width,hight,curr);
+		 printf("num of neighb %d \n", cube_neighbours);
 		 if(cube_current_status==0 && cube_neighbours==3) return 1;
 		 if(cube_current_status==1 && (cube_neighbours==2 || cube_neighbours==3)) return 1;
 		 return 0;
 	 }
 	 void calcNextGen(){
-         for (int i = 0; i < task.getNumOfRows(); ++i){
+	 	Semaphore mutex(1);
+         for (int i = task.getStartIndex(); i < task.getEndIndex(); ++i){
 			 for (int j = 0; j <task.getWidth(); ++j){
+			 	mutex.down();
+			 	printf("the next matrix in next[%d][%d]=%d \n",i,j,task.getNext()[i][j]);
 			 	task.getNext()[i][j]=cubeInNextGen(i,j,task.getWidth(),task.getHight(),task.getCurr());
+			 	mutex.up();
 			 }
          }
 	 }

@@ -214,6 +214,7 @@ void Game::_destroy_game(){
 
 	delete tasks_q;
 	for (uint i = 0; i < m_threadpool.size(); ++i){
+		printf("free thread num: %d \n", m_threadpool[i]->thread_id());
 		delete(m_threadpool[i]);
 	}
 //	delete[](threadArray);
