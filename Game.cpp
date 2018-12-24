@@ -135,7 +135,7 @@ void Game::_init_game() {
 	//TODO manage constructor
 	tasks_q=new PCQueue<Task>;
 	//threadArray =new gameThread*[m_thread_num]; //TODO USE GIVEN THREAD VECTOR
-	for (int j = 0; j < m_thread_num; ++j){
+	for (uint j = 0; j < m_thread_num; ++j){
         m_threadpool.insert(m_threadpool.end(),(new gameThread(j,tasks_q)));// = new gameThread(j,tasks_q);
 	}
     // Create game fields
@@ -148,19 +148,19 @@ void Game::_init_game() {
 	InitTheBoards(curr,next,height_matrix,width_matrix,filename);
 
 	// Start the threads
-	for (int i = 0; i < m_threadpool.size(); ++i){
+	for (uint i = 0; i < m_threadpool.size(); ++i){
         m_threadpool[i]->start();
 	}
 
 	// Testing of your implementation will presume all threads are started here
-};
+}
 
 void Game::_step(uint curr_gen) {
 	// Push jobs to queue
 
 	int min_rows=(height_matrix)/m_thread_num;
 	int last_task_rows=height_matrix;
-	for (int j = 0; j < m_thread_num; ++j){
+	for (uint j = 0; j < m_thread_num; ++j){
 		if(j!=m_thread_num-1){
 			tasks_q->push(Task(j*min_rows, j*min_rows + min_rows + width_matrix, curr, next,height_matrix,width_matrix));
 			last_task_rows-=min_rows;
@@ -171,7 +171,7 @@ void Game::_step(uint curr_gen) {
 	}
 
 	// Wait for the workers to finish calculating
-	for (int i = 0; i <m_threadpool.size(); ++i){
+	for (uint i = 0; i <m_threadpool.size(); ++i){
         m_threadpool[i]->join();
 	}
 
@@ -198,7 +198,7 @@ void Game::_destroy_game(){
 //	}
 
 	delete tasks_q;
-	for (int i = 0; i < m_threadpool.size(); ++i){
+	for (uint i = 0; i < m_threadpool.size(); ++i){
 		delete(m_threadpool[i]);
 	}
 //	delete[](threadArray);
