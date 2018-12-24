@@ -136,7 +136,7 @@ void Game::_init_game() {
 	tasks_q=new PCQueue<Task>;
 	//threadArray =new gameThread*[m_thread_num]; //TODO USE GIVEN THREAD VECTOR
 	for (uint j = 0; j < m_thread_num; ++j){
-        m_threadpool.insert(m_threadpool.end(),(new gameThread(j,tasks_q)));// = new gameThread(j,tasks_q);
+        m_threadpool.insert(m_threadpool.end(),(new gameThread(j,tasks_q,&this->sem)));// = new gameThread(j,tasks_q);
 	}
     // Create game fields
 	curr = new int*[height_matrix];
@@ -157,23 +157,21 @@ void Game::_init_game() {
 
 void Game::_step(uint curr_gen) {
 	// Push jobs to queue
-
+    int counter=m_thread_num;
 	int min_rows=(height_matrix)/m_thread_num;
 	int last_task_rows=height_matrix;
 	for (uint j = 0; j < m_thread_num; ++j){
 		if(j!=m_thread_num-1){
-			tasks_q->push(Task(j*min_rows, j*min_rows + min_rows + width_matrix, curr, next,height_matrix,width_matrix));
+			tasks_q->push(Task(j*min_rows, j*min_rows + min_rows , curr, next,height_matrix,width_matrix,&counter));
 			last_task_rows-=min_rows;
 		}
 		else{
-			tasks_q->push(Task(j*min_rows, j*min_rows + last_task_rows + width_matrix, curr, next,height_matrix,width_matrix));
+			tasks_q->push(Task(j*min_rows, j*min_rows + last_task_rows , curr, next,height_matrix,width_matrix,&counter));
 		}
 	}
 
 	// Wait for the workers to finish calculating
-	for (uint i = 0; i <m_threadpool.size(); ++i){
-        m_threadpool[i]->join();
-	}
+	while(counter!=0){}
 
 	// Swap pointers between current and next field
 	int** temp;

@@ -36,6 +36,7 @@ private:
 	Semaphore producer;
 	std::queue<T> item_queue;
 
+
 };
 
 // Recommendation: Use the implementation of the std::queue for this exercise

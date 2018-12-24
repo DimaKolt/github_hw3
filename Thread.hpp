@@ -44,8 +44,22 @@ private:
 class gameThread: public Thread
 {
 public:
-	gameThread(int id ,PCQueue<Task>* queue):Thread(id),task_queue(queue){};
-	 void thread_workload() override{}
+	gameThread(int id ,PCQueue<Task>* queue,Semaphore* semaphore) :Thread(id),task_queue(queue),sem(semaphore){};
+	 void thread_workload() override{
+	 	while(1){
+	 	    //?????
+	 		task=task_queue->pop();
+	 		//start timer
+	 		this->calcNextGen();
+	 		sem->down();
+	 		task.counterDown();
+	 		//stop timer
+	 		sem->up();
+	 		//append duration to shared tile history vector
+	 		//counter++?
+
+	 	}
+	 }
 
 	 int cubeStatus(int i,int j, int width,int hight,int** curr){
 		if( i<0 || i>=width || j <0 || j>=hight) return 0;
@@ -74,7 +88,8 @@ public:
 private:
 	PCQueue<Task>* task_queue;
 	Task task;
-};
+	Semaphore* sem;
+    };
 
 
 
