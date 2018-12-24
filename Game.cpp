@@ -72,6 +72,18 @@ static void PrintTheBoard(int** field, int field_height, int field_width){
 	
 }
 
+static void CleareNextBoard(int** next, int height, int width){
+	for (int i = 0; i < height; ++i){
+		for (int j = 0; j < width; ++j){
+			next[i][j]=0;
+		}
+	}
+}
+
+
+///////////////////STATTIC FUNCTIONS END HERE
+
+
 Game::Game(game_params params){
     int num_of_calls;
     int num_of_rows;
@@ -180,8 +192,11 @@ void Game::_step(uint curr_gen) {
 	temp=curr;
 	curr=next;
 	next=temp;
+	CleareNextBoard(next,height_matrix,width_matrix);
 
 }
+
+
 
 void Game::_destroy_game(){
 	// Destroys board and frees all threads and resources
