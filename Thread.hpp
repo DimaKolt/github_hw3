@@ -44,21 +44,29 @@ private:
 class gameThread: public Thread
 {
 public:
-	gameThread(int id ,PCQueue<Task>* queue,Semaphore* semaphore) :Thread(id),task_queue(queue),sem(semaphore){};
+	gameThread(int id ,PCQueue<Task>* queue) :Thread(id),task_queue(queue){};
 	 void thread_workload() override{
-	 	while(1){
-	 	    //?????
-	 		task=task_queue->pop();
-	 		//start timer
-	 		this->calcNextGen();
-	 		sem->down();
-	 		task.counterDown();
-	 		//stop timer
-	 		sem->up();
-	 		//append duration to shared tile history vector
-	 		//counter++?
+		 while (1){
+			 //?????
+			 task = task_queue->pop();
+			 printf("task num: %d pop task from line %d, to line %d \n",thread_id(), task.getStartIndex(), task.getEndIndex());
+			 //start timer
+			 calcNextGen();
+			
+			 //stop timer
+			 //append duration to shared tile history vector
 
-	 	}
+
+
+			 task.get_mutex()->down();
+			 task.counterDown();
+			 printf("counter is %d\n", task.check_counte());
+			 if (task.check_counte() == 0){
+				 task.get_barrier()->up();
+				 printf("all tasks is finished\n");
+			 }
+			 task.get_mutex()->up();
+		 }
 	 }
 
 	 int cubeStatus(int i,int j, int width,int hight,int** curr){
@@ -81,14 +89,14 @@ public:
 	 void calcNextGen(){
          for (int i = 0; i < task.getNumOfRows(); ++i){
 			 for (int j = 0; j <task.getWidth(); ++j){
-			 	task.getCurr()[i][j]=cubeInNextGen(i,j,task.getWidth(),task.getHight(),task.getCurr());
+			 	task.getNext()[i][j]=cubeInNextGen(i,j,task.getWidth(),task.getHight(),task.getCurr());
 			 }
          }
 	 }
 private:
 	PCQueue<Task>* task_queue;
 	Task task;
-	Semaphore* sem;
+//	Semaphore* sem;
     };
 
 

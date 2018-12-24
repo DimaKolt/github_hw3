@@ -58,7 +58,8 @@ protected: // All members here are protected, instead of private for testing pur
 	PCQueue<Task>* tasks_q;
 	int** curr;
 	int** next;
-	Semaphore sem;
+//	Semaphore mutex;
+//	Semaphore barrier;
 //	gameThread** threadArray;
 };
 #endif
