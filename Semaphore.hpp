@@ -10,8 +10,10 @@ public:
 
     void down(){
         pthread_mutex_lock(&mutex);
-        while (counter <= 0)
-            pthread_cond_wait(&cond,&mutex);
+        while (counter <= 0){
+            //mutex unlock??
+            pthread_cond_wait(&cond, &mutex);
+        }
         counter--;
         pthread_mutex_unlock(&mutex);
     }

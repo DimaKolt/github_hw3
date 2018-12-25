@@ -175,7 +175,9 @@ void Game::_step(uint curr_gen) {
 	int min_rows=(height_matrix)/m_thread_num;
 	int last_task_rows=height_matrix;
 	for (uint j = 0; j < m_thread_num; ++j){
+//		printf("push task %d - %d \n", j*min_rows, j*min_rows + min_rows);
 		if(j!=m_thread_num-1){
+			
 			tasks_q->push(Task(j*min_rows, j*min_rows + min_rows , curr, next,height_matrix,width_matrix,&counter,&mutex,&barrier));
 			last_task_rows-=min_rows;
 		}

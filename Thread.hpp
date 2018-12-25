@@ -52,16 +52,16 @@ public:
 			 printf("task num: %d pop task from line %d, to line %d \n",thread_id(), task.getStartIndex(), task.getEndIndex());
 			 //start timer
 			
-			 task.get_mutex()->down(); //TODO here for debug
 			 calcNextGen();
-			
-			 //stop timer
-			 //append duration to shared tile history vector
-
-
-
-			
-			 task.counterDown();
+            
+             //stop timer
+             //append duration to shared tile history vector
+            
+            
+            
+             task.get_mutex()->down(); //TODO here for debug
+            
+             task.counterDown();
 			 printf("counter from thread is %d\n", task.check_counte());
 			 if (task.check_counte() == 0){
 				 task.get_barrier()->up();
