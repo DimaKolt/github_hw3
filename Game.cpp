@@ -209,11 +209,17 @@ void Game::_destroy_game(){
 	delete[] curr;
 	delete[] next;
 	
-	//we waited in evry generation for all the threads
-//	for (int i = 0; i <m_thread_num; ++i){
-//		threadArray[i]->join();
-//	}
-
+	//send poisen to threads to finish them before delete
+	Semaphore mutex(1);
+	Semaphore barrier(0);
+	int counter =m_thread_num;
+	for (uint i = 0; i <m_thread_num; ++i){
+        tasks_q->push(Task(-1, -1, curr, next,height_matrix,width_matrix,&counter,&mutex,&barrier));
+	}
+ 
+	barrier.down(); //continue only when all the treads are finished
+	printf("pass delete barrier\n");
+	
 	delete tasks_q;
 	for (uint i = 0; i < m_threadpool.size(); ++i){
 		printf("free thread num: %d \n", m_threadpool[i]->thread_id());
