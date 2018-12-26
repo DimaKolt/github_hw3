@@ -27,7 +27,7 @@ public:
 	const vector<float> gen_hist() const; // Returns the generation timing histogram  
 	const vector<float> tile_hist() const; // Returns the tile timing histogram
 	uint thread_num() const; //Returns the effective number of running threads = min(thread_num, field_height)
-
+	vector<float>* getTileHist() { return &m_tile_hist;}
 
 protected: // All members here are protected, instead of private for testing purposes
 
@@ -58,8 +58,6 @@ protected: // All members here are protected, instead of private for testing pur
 	PCQueue<Task>* tasks_q;
 	int** curr;
 	int** next;
-//	Semaphore mutex;
-//	Semaphore barrier;
-//	gameThread** threadArray;
+
 };
 #endif

@@ -44,16 +44,21 @@ private:
 class gameThread: public Thread
 {
 public:
-	gameThread(int id ,PCQueue<Task>* queue) :Thread(id),task_queue(queue){};
+	gameThread(int id ,PCQueue<Task>* queue,vector<float>* hist) :Thread(id),task_queue(queue),m_tile_hist(hist){};
 	 void thread_workload() override{
 		 while (1){
 			 //?????
 			 task = task_queue->pop();
 			 printf("task num: %d pop task from line %d, to line %d \n",thread_id(), task.getStartIndex(), task.getEndIndex());
 			 //start timer
-			
-			 calcNextGen();
-            
+             auto gen_start = std::chrono::system_clock::now();
+
+             calcNextGen();
+             auto gen_end = std::chrono::system_clock::now();
+             task.get_mutex()->down();
+             m_tile_hist->push_back((float)std::chrono::duration_cast<std::chrono::microseconds>(gen_end - gen_start).count());
+             task.get_mutex()->up();
+
              //stop timer
              //append duration to shared tile history vector
             
@@ -105,8 +110,8 @@ public:
 private:
 	PCQueue<Task>* task_queue;
 	Task task;
-//	Semaphore* sem;
-    };
+    vector<float>* m_tile_hist;
+};
 
 
 

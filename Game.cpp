@@ -148,7 +148,7 @@ void Game::_init_game() {
 	tasks_q=new PCQueue<Task>;
 	//threadArray =new gameThread*[m_thread_num]; //TODO USE GIVEN THREAD VECTOR
 	for (uint j = 0; j < m_thread_num; ++j){
-        m_threadpool.insert(m_threadpool.end(),(new gameThread(j,tasks_q)));// = new gameThread(j,tasks_q);
+        m_threadpool.insert(m_threadpool.end(),(new gameThread(j,tasks_q,getTileHist())));// = new gameThread(j,tasks_q);
 	}
     // Create game fields
 	curr = new int*[height_matrix];
