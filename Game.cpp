@@ -187,7 +187,7 @@ void Game::_step(uint curr_gen) {
 	}
 	// Wait for the workers to finish calculating
 	barrier.down();
-	printf("pass the barrier, counter :%d\n",counter);
+//	printf("pass the barrier, counter :%d\n",counter);
 
 	// Swap pointers between current and next field
 	int** temp;
@@ -218,12 +218,12 @@ void Game::_destroy_game(){
 	}
  
 	barrier.down(); //continue only when all the treads are finished
-	printf("pass delete barrier\n");
+//	printf("pass delete barrier\n");
 	
 	delete tasks_q;
 	for (uint i = 0; i < m_threadpool.size(); ++i){
-		printf("free thread num: %d \n", m_threadpool[i]->thread_id());
-		delete(m_threadpool[i]);
+//		printf("free thread num: %d \n", m_threadpool[i]->thread_id());
+		delete m_threadpool[i];
 	}
 //	delete[](threadArray);
 

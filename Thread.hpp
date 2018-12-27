@@ -49,22 +49,25 @@ public:
 		 while (1){
 			 //?????
 			 task = task_queue->pop();
-			 printf("task num: %d pop task from line %d, to line %d \n",thread_id(), task.getStartIndex(), task.getEndIndex());
+//			 printf("task num: %d pop task from line %d, to line %d \n",thread_id(), task.getStartIndex(), task.getEndIndex());
 			 //start timer
+             
+			 
+             //check if that poissen
 			if (task.getStartIndex()==-1 && task.getEndIndex()==-1){
 				task.get_mutex()->down();
 				task.counterDown();
-				printf("counter from thread is %d\n", task.check_counte());
+//				printf("counter from thread is %d\n", task.check_counte());
 				if(task.check_counte()==0){
 					task.get_barrier()->up();
-					printf("all tasks is destroyed\n");
+//					printf("all tasks is destroyed\n");
 				}
 				task.get_mutex()->up();
 				return;
 			}
-            
-             auto gen_start = std::chrono::system_clock::now();
-            
+			
+			
+			 auto gen_start = std::chrono::system_clock::now();
              calcNextGen();
              
              
@@ -78,13 +81,13 @@ public:
             
             
             
-             task.get_mutex()->down(); //TODO here for debug
+             task.get_mutex()->down();
             
              task.counterDown();
-			 printf("counter from thread is %d\n", task.check_counte());
+//			 printf("counter from thread is %d\n", task.check_counte());
 			 if (task.check_counte() == 0){
 				 task.get_barrier()->up();
-				 printf("all tasks is finished\n");
+//				 printf("all tasks is finished\n");
 			 }
 			 task.get_mutex()->up();
 		 }
