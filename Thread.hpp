@@ -55,15 +55,17 @@ public:
 			 
              //check if that poissen
 			if (task.getStartIndex()==-1 && task.getEndIndex()==-1){
-				task.get_mutex()->down();
-				task.counterDown();
-//				printf("counter from thread is %d\n", task.check_counte());
+//                printf("counter from thread is %d thread to kill is: %d\n", task.check_counte(),thread_id());
+                task.get_mutex()->down();
+                task.counterDown();
+//                printf("counter from thread is %d \n",task.check_counte());
 				if(task.check_counte()==0){
 					task.get_barrier()->up();
 //					printf("all tasks is destroyed\n");
 				}
-				task.get_mutex()->up();
-				return;
+//                printf("mutex up by %d\n",thread_id());
+                task.get_mutex()->up();
+                break;
 			}
 			
 			

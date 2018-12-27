@@ -136,9 +136,11 @@ void Game::run() {
 		_step(i); // Iterates a single generation
 		auto gen_end = std::chrono::system_clock::now();
 		m_gen_hist.push_back((float)std::chrono::duration_cast<std::chrono::microseconds>(gen_end - gen_start).count());
+//        printf("finish m_gen_hist.push_back\n");
 		print_board(NULL);
 	} // generation loop
 	print_board("Final Board");
+//	printf("start to destroy\n");
 	_destroy_game();
 }
 
@@ -187,7 +189,7 @@ void Game::_step(uint curr_gen) {
 	}
 	// Wait for the workers to finish calculating
 	barrier.down();
-//	printf("pass the barrier, counter :%d\n",counter);
+//	printf("pass the barrier, counter :%d in step: %d \n",counter, curr_gen);
 
 	// Swap pointers between current and next field
 	int** temp;
@@ -203,17 +205,18 @@ void Game::_step(uint curr_gen) {
 void Game::_destroy_game(){
 	// Destroys board and frees all threads and resources
 	for(int i=0;i<height_matrix; i++){
-		delete curr[i];
-		delete next[i];
+		delete[] curr[i];
+		delete[] next[i];
 	}
 	delete[] curr;
 	delete[] next;
-	
+//	printf("finish destroed matrix\n");
 	//send poisen to threads to finish them before delete
 	Semaphore mutex(1);
 	Semaphore barrier(0);
 	int counter =m_thread_num;
 	for (uint i = 0; i <m_thread_num; ++i){
+//		printf("push poisen num %d\n",i);
         tasks_q->push(Task(-1, -1, curr, next,height_matrix,width_matrix,&counter,&mutex,&barrier));
 	}
  
