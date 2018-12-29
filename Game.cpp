@@ -101,15 +101,6 @@ Game::Game(game_params params){
 	height_matrix=num_of_rows;
 	width_matrix=num_of_calls;
 	filename=params.filename;
-//	curr = new int[num_of_calls][num_of_rows];
-//	curr = new int*[num_of_rows];
-//	next = new int*[num_of_rows];
-//	for(int i = 0; i < num_of_rows; ++i){
-//		curr[i] = new int[num_of_calls];
-//		next[i] = new int[num_of_calls];
-//	}
-//	InitTheBoards(curr,next,height_matrix,width_matrix,params.filename);
-//	print_board("tiny");
 }
 
 uint Game::thread_num() const{
@@ -136,11 +127,9 @@ void Game::run() {
 		_step(i); // Iterates a single generation
 		auto gen_end = std::chrono::system_clock::now();
 		m_gen_hist.push_back((float)std::chrono::duration_cast<std::chrono::microseconds>(gen_end - gen_start).count());
-//        printf("finish m_gen_hist.push_back\n");
 		print_board(NULL);
 	} // generation loop
 	print_board("Final Board");
-//	printf("start to destroy\n");
 	_destroy_game();
 }
 
@@ -177,7 +166,6 @@ void Game::_step(uint curr_gen) {
 	int min_rows=(height_matrix)/m_thread_num;
 	int last_task_rows=height_matrix;
 	for (uint j = 0; j < m_thread_num; ++j){
-//		printf("push task %d - %d \n", j*min_rows, j*min_rows + min_rows);
 		if(j!=m_thread_num-1){
 			
 			tasks_q->push(Task(j*min_rows, j*min_rows + min_rows , curr, next,height_matrix,width_matrix,&counter,&mutex,&barrier));
@@ -189,7 +177,6 @@ void Game::_step(uint curr_gen) {
 	}
 	// Wait for the workers to finish calculating
 	barrier.down();
-//	printf("pass the barrier, counter :%d in step: %d \n",counter, curr_gen);
 
 	// Swap pointers between current and next field
 	int** temp;
@@ -210,26 +197,20 @@ void Game::_destroy_game(){
 	}
 	delete[] curr;
 	delete[] next;
-//	printf("finish destroed matrix\n");
 	//send poisen to threads to finish them before delete
 	Semaphore mutex(1);
 	Semaphore barrier(0);
 	int counter =m_thread_num;
 	for (uint i = 0; i <m_thread_num; ++i){
-//		printf("push poisen num %d\n",i);
         tasks_q->push(Task(-1, -1, curr, next,height_matrix,width_matrix,&counter,&mutex,&barrier));
 	}
  
 	barrier.down(); //continue only when all the treads are finished
-//	printf("pass delete barrier\n");
 	
 	delete tasks_q;
 	for (uint i = 0; i < m_threadpool.size(); ++i){
-//		printf("free thread num: %d \n", m_threadpool[i]->thread_id());
 		delete m_threadpool[i];
 	}
-//	delete[](threadArray);
-
 	// Not implemented in the Game's destructor for testing purposes. 
 	// Testing of your implementation will presume all threads are joined here
 }

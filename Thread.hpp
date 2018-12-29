@@ -47,32 +47,22 @@ public:
 	gameThread(int id ,PCQueue<Task>* queue,vector<float>* hist) :Thread(id),task_queue(queue),m_tile_hist(hist){};
 	 void thread_workload() override{
 		 while (1){
-			 //?????
 			 task = task_queue->pop();
-//			 printf("task num: %d pop task from line %d, to line %d \n",thread_id(), task.getStartIndex(), task.getEndIndex());
-			 //start timer
-             
-			 
+			
              //check if that poissen
 			if (task.getStartIndex()==-1 && task.getEndIndex()==-1){
-//                printf("counter from thread is %d thread to kill is: %d\n", task.check_counte(),thread_id());
                 task.get_mutex()->down();
                 task.counterDown();
-//                printf("counter from thread is %d \n",task.check_counte());
 				if(task.check_counte()==0){
 					task.get_barrier()->up();
-//					printf("all tasks is destroyed\n");
 				}
-//                printf("mutex up by %d\n",thread_id());
                 task.get_mutex()->up();
                 break;
 			}
 			
-			
+			 //start timer
 			 auto gen_start = std::chrono::system_clock::now();
              calcNextGen();
-             
-             
              auto gen_end = std::chrono::system_clock::now();
              task.get_mutex()->down();
              m_tile_hist->push_back((float)std::chrono::duration_cast<std::chrono::microseconds>(gen_end - gen_start).count());
@@ -80,16 +70,11 @@ public:
             
              //stop timer
              //append duration to shared tile history vector
-            
-            
-            
              task.get_mutex()->down();
             
              task.counterDown();
-//			 printf("counter from thread is %d\n", task.check_counte());
 			 if (task.check_counte() == 0){
 				 task.get_barrier()->up();
-//				 printf("all tasks is finished\n");
 			 }
 			 task.get_mutex()->up();
 		 }
@@ -97,13 +82,11 @@ public:
 
 	 int cubeStatus(int i,int j, int width,int hight,int** curr){
 		if( i<0 || i>=hight || j <0 || j>=width) return 0;
-//		printf("curr[%d][%d]=%d,",i,j,curr[i][j]);
 		 return curr[i][j];
 	 }
 	 int cubeInNextGen(int i,int j, int width,int hight,int** curr){
 	 	int cube_current_status=curr[i][j];
 	 	int cube_neighbours=0;
-//		 printf("start handle curr[%d][%d], status: %d by task: %d\n",i,j,cube_current_status,thread_id());
 		 for (int k = 0; k <3; ++k){
 		 	
 			 cube_neighbours+=cubeStatus(i-1,j-1+k,width,hight,curr);
@@ -111,7 +94,6 @@ public:
 		 }
 		 cube_neighbours+=cubeStatus(i,j-1,width,hight,curr);
 		 cube_neighbours+=cubeStatus(i,j+1,width,hight,curr);
-//		 printf("\n num of neighb %d \n", cube_neighbours);
 		 if(cube_current_status==0 && cube_neighbours==3) return 1;
 		 if(cube_current_status==1 && (cube_neighbours==2 || cube_neighbours==3)) return 1;
 		 return 0;
@@ -119,9 +101,6 @@ public:
 	 void calcNextGen(){
          for (int i = task.getStartIndex(); i < task.getEndIndex(); ++i){
 			 for (int j = 0; j <task.getWidth(); ++j){
-//			 	printf("the next matrix in next[%d][%d]=%d \n",i,j,task.getNext()[i][j]);
-//			 	printf("check H : %d, W: %d \n",task.getHight(),task.getWidth());
-//				printf("check start index : %d , stop index: %d \n",task.getStartIndex(),task.getEndIndex());
 			 	task.getNext()[i][j]=cubeInNextGen(i,j,task.getWidth(),task.getHight(),task.getCurr());
 			 }
          }
